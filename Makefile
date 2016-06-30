@@ -21,5 +21,5 @@ clean:
 
 ### Main program compilation and assembly
 
-$(APP_NAME): obj/$(APP_NAME).o $(LGW_PATH)/libloragw.a
+$(APP_NAME): $(LGW_PATH)/libloragw.a
 	$(CC) -L$(LGW_PATH) $< -o $@ $(LIBS)
