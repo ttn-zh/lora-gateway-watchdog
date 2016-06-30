@@ -8,7 +8,7 @@ CFLAGS := -O2 -Wall -Wextra -std=c99 -Iinc -I.
 VFLAG := -D VERSION_STRING="\"$(RELEASE_VERSION)\""
 LIBS := -lloragw -lrt -lpthread
 
-# LGW_INC = $(LGW_PATH)/inc/loragw_hal.h
+LGW_INC = $(LGW_PATH)/inc/loragw_hal.h
 
 
 # Build targets
@@ -21,5 +21,8 @@ clean:
 
 ### Main program compilation and assembly
 
-$(APP_NAME): $(LGW_PATH)/libloragw.a
+obj/$(APP_NAME).o: src/$(APP_NAME).c $(LGW_INC)
+	$(CC) -c $(CFLAGS) $(VFLAG) -I$(LGW_PATH)/inc $< -o $@
+
+$(APP_NAME): obj/$(APP_NAME).o $(LGW_PATH)/libloragw.a
 	$(CC) -L$(LGW_PATH) $< -o $@ $(LIBS)
