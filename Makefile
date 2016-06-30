@@ -1,7 +1,7 @@
 APP_NAME := watchdog
 
-LGW_PATH ?= ../../lora_gateway/libloragw
-RELEASE_VERSION := $(shell cat ../VERSION)
+LGW_PATH ?= ../lora_gateway/libloragw
+RELEASE_VERSION := $(shell cat VERSION)
 
 CC := gcc
 CFLAGS := -O2 -Wall -Wextra -std=c99 -Iinc -I.
