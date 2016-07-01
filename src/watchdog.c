@@ -65,6 +65,7 @@ int main(void)
 		uint32_t trig_cnt_us;
 		if (lgw_get_trigcnt(&trig_cnt_us) == LGW_HAL_SUCCESS && trig_cnt_us == 0x7E000000) {
 			printf("WARN: unintended reset detected\n");
+			exit(EXIT_FAILURE);
 		} else {
 			if (check_count++ > 100) {
 				printf("INFO: SX1301 status is valid\n");
