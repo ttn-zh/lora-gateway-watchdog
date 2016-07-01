@@ -22,6 +22,7 @@
 #include <errno.h>					/* error messages */
 
 #include "loragw_hal.h"
+#include "loragw_aux.h"
 
 #define WATCHDOG_INTERVAL 5			/* default watchdog time interval in seconds */
 
