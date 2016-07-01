@@ -2,10 +2,19 @@
  Watchdog service that monitors unintended resets of the SX1301.
  */
 
+/* Dependencies */
+
+/* Fix an issue between POSIX and C99 */
+#ifdef __MACH__
+#elif __STDC_VERSION__ >= 199901L
+	#define _XOPEN_SOURCE 600
+#else
+	#define _XOPEN_SOURCE 500
+#endif
+
 #include <stdint.h>					/* C99 types */
 #include <stdbool.h>				/* bool type */
 #include <stdio.h>					/* printf, fprintf, snprintf, fopen, fputs */
-
 #include <signal.h>					/* sigaction */
 #include <time.h>					/* time, clock_gettime, strftime, gmtime */
 #include <sys/time.h>				/* timeval */
