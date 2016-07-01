@@ -57,6 +57,7 @@ int main(void)
 	sigaction(SIGTERM, &sigact, NULL); /* default "kill" command */
 
 	printf("INFO: Starting SX1301 watchdog service\n");
+	int check_count = 0;
 
 	while (!exit_sig && !quit_sig) {
 		wait_ms(1000 * WATCHDOG_INTERVAL);
@@ -64,6 +65,11 @@ int main(void)
 		uint32_t trig_cnt_us;
 		if (lgw_get_trigcnt(&trig_cnt_us) == LGW_HAL_SUCCESS && trig_cnt_us == 0x7E000000) {
 			printf("WARN: unintended reset detected\n");
+		} else {
+			if (check_count++ > 100) {
+				printf("INFO: SX1301 status is valid\n");
+				check_count = 0;
+			}
 		}
 
 		if (exit_sig) {
