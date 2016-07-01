@@ -67,9 +67,11 @@ int main(void)
 			printf("WARN: unintended reset detected\n");
 			exit(EXIT_FAILURE);
 		} else {
-			if (check_count++ > 100) {
+			// Simulate failure exit to test restart
+			if (check_count++ > 1) {
 				printf("INFO: SX1301 status is valid\n");
 				check_count = 0;
+				exit(EXIT_FAILURE);
 			}
 		}
 
