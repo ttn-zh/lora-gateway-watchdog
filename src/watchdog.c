@@ -61,6 +61,11 @@ int main(void)
 	while (!exit_sig && !quit_sig) {
 		wait_ms(1000 * WATCHDOG_INTERVAL);
 
+		uint32_t trig_cnt_us;
+		if (lgw_get_trigcnt(&trig_cnt_us) == LGW_HAL_SUCCESS && trig_cnt_us == 0x7E000000) {
+			printf("WARN: unintended reset detected\n");
+		}
+
 		if (exit_sig) {
 			printf("INFO: stopping watchdog service\n");
 		}
