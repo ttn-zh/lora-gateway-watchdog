@@ -32,6 +32,7 @@ volatile bool quit_sig = false;		/* 1 -> application terminates without shutting
 
 /* Function declarations */
 static void sig_handler(int sigio);
+static bool wtc_sx1301_status();
 
 /* Function definitions */
 static void sig_handler(int sigio) {
@@ -39,10 +40,24 @@ static void sig_handler(int sigio) {
 		quit_sig = true;;
 	} else if ((sigio == SIGINT) || (sigio == SIGTERM)) {
 		exit_sig = true;
+	} else if (sigio == SIGINFO) {
+		if (!wtc_sx1301_status()) {
+			printf("WARN: unintended reset detected\n");
+		} else {
+			printf("INFO: SX1301 status is valid\n");
+		}
 	}
 	return;
 }
 
+static bool wtc_sx1301_status() {
+	uint32_t trig_cnt_us;
+	if (lgw_get_trigcnt(&trig_cnt_us) == LGW_HAL_SUCCESS && trig_cnt_us == 0x7E000000) {
+		return false;
+	}
+
+	return true;
+}
 
 int main(void)
 {
@@ -54,6 +69,7 @@ int main(void)
 	sigact.sa_handler = sig_handler;
 	sigaction(SIGQUIT, &sigact, NULL); /* Ctrl-\ */
 	sigaction(SIGINT, &sigact, NULL); /* Ctrl-C */
+	sigaction(SIGINFO, &sigact, NULL); /* Ctrl-T */
 	sigaction(SIGTERM, &sigact, NULL); /* default "kill" command */
 
 	printf("INFO: Starting SX1301 watchdog service\n");
@@ -61,8 +77,7 @@ int main(void)
 	while (!exit_sig && !quit_sig) {
 		wait_ms(1000 * WATCHDOG_INTERVAL);
 
-		uint32_t trig_cnt_us;
-		if (lgw_get_trigcnt(&trig_cnt_us) == LGW_HAL_SUCCESS && trig_cnt_us == 0x7E000000) {
+		if (!wtc_sx1301_status()) {
 			printf("WARN: unintended reset detected\n");
 		}
 
